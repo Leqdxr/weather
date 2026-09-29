@@ -4,6 +4,25 @@ const results = document.querySelector('.results')
 // Free-tier API Key exposed on purpose because this is a practice project with no backend
 const API_KEY = '82b7461b5f374a1f89513626262909'
 
+function paragraphElement([...content], isValid) {
+    results.textContent = ''
+    const p = document.createElement('p')
+    p.textContent = `${content}`
+    results.appendChild(p)
+    if(!isValid) {
+        p.style.color = '#bf616a'
+    }
+}
+
+function imageElement(url) {
+    const img = document.createElement('img')
+    img.src = `${url}`
+    img.alt = 'status-image'
+    img.width = 300
+    img.height = 300
+    results.appendChild(img)
+}
+
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -14,9 +33,39 @@ form.addEventListener('submit', (e) => {
     async function getWeather() {
         try {
             const response = await fetch(requestUrl)
+            const data = await response.json()
+            const condition = data.current.condition.text
+            const icon = data.current.condition.icon
+            const temp = data.current.temp_c
+            const humidity = data.current.humidity
+            const wind = data.current.wind_kph
+
+            paragraphElement([condition, `${temp}°C`, `${humidity}%`, `${wind}km/h`], true)
+            imageElement(`https:${icon}`)
+            
+            switch (response.code) {
+                case 1003:
+                    paragraphElement('Please enter a city name', false)
+                    break;
+                
+                case 1006:
+                    paragraphElement('Please make sure the city name is correct and contains no spelling mistake', false)
+                    break;
+                case 2006:
+                case 2008:
+                    paragraphElement('Problems with API Key, Please try again later', false)
+                    break;
+                case 2007:
+                    paragraphElement('Maximum number of calls per month has been exceeded', false)
+                    break;
+                case 2009:
+                    paragraphElement('API Key does not have access to this resouce', false)
+                    break; 
+            }
         }
         catch {
-            
+            paragraphElement('Something went wrong, check your connection and try again later', false)
         }
     }
+    getWeather()
 })
