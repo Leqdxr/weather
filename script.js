@@ -32,7 +32,7 @@ form.addEventListener('submit', (e) => {
     
     // Get city from user
     const city = document.getElementById('city').value.trim()
-    const requestUrl = `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
+    const requestUrl = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
 
     async function getWeather() {
         try {
