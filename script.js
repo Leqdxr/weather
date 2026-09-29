@@ -1,17 +1,23 @@
 const form = document.querySelector('form')
 const results = document.querySelector('.results')
+const errors = document.querySelector('.errors')
 
 // Free-tier API Key exposed on purpose because this is a practice project with no backend
 const API_KEY = '82b7461b5f374a1f89513626262909'
 
-function paragraphElement([...content], isValid) {
+function paragraphElement([...content]) {
     results.textContent = ''
     const p = document.createElement('p')
     p.textContent = content.join('\n')
     results.appendChild(p)
-    if(!isValid) {
-        p.style.color = '#bf616a'
-    }
+}
+
+function errorElement(content) {
+    errors.textContent = ''
+    const p = document.createElement('p')
+    p.textContent = `${content}`
+    errors.appendChild(p)
+    p.style.color = '#bf616a'
 }
 
 function imageElement(url) {
@@ -33,7 +39,6 @@ form.addEventListener('submit', (e) => {
             const response = await fetch(requestUrl)
             const data = await response.json()
             const cityName = data.location.name
-            const region = data.location.region
             const country = data.location.country
             const localTime = data.location.localtime
             const condition = data.current.condition.text
@@ -43,7 +48,7 @@ form.addEventListener('submit', (e) => {
             const wind = data.current.wind_kph
 
             paragraphElement([
-                `${cityName}, ${region}, ${country}`,
+                `${cityName}, ${country}`,
                 `Local time: ${localTime}`,
                 condition,
                 `${temp}°C`,
@@ -54,26 +59,26 @@ form.addEventListener('submit', (e) => {
             
             switch (response.code) {
                 case 1003:
-                    paragraphElement('Please enter a city name', false)
+                    errorElement('Please enter a city name')
                     break;
                 
                 case 1006:
-                    paragraphElement('Please make sure the city name is correct and contains no spelling mistake', false)
+                    errorElement('Please make sure the city name is correct and contains no spelling mistake')
                     break;
                 case 2006:
                 case 2008:
-                    paragraphElement('Problems with API Key, Please try again later', false)
+                    errorElement('Problems with API Key, Please try again later')
                     break;
                 case 2007:
-                    paragraphElement('Maximum number of calls per month has been exceeded', false)
+                    errorElement('Maximum number of calls per month has been exceeded')
                     break;
                 case 2009:
-                    paragraphElement('API Key does not have access to this resouce', false)
+                    errorElement('API Key does not have access to this resouce')
                     break; 
             }
         }
         catch {
-            paragraphElement('Something went wrong, check your connection and try again later', false)
+            errorElement('Something went wrong, check your connection and try again later')
         }
     }
     getWeather()
