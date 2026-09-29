@@ -18,8 +18,6 @@ function imageElement(url) {
     const img = document.createElement('img')
     img.src = `${url}`
     img.alt = 'status-image'
-    img.width = 300
-    img.height = 300
     results.appendChild(img)
 }
 
@@ -34,13 +32,24 @@ form.addEventListener('submit', (e) => {
         try {
             const response = await fetch(requestUrl)
             const data = await response.json()
+            const cityName = data.location.name
+            const region = data.location.region
+            const country = data.location.country
+            const localTime = data.location.localtime
             const condition = data.current.condition.text
             const icon = data.current.condition.icon
             const temp = data.current.temp_c
             const humidity = data.current.humidity
             const wind = data.current.wind_kph
 
-            paragraphElement([condition, `${temp}°C`, `${humidity}%`, `${wind}km/h`], true)
+            paragraphElement([
+                `${cityName}, ${region}, ${country}`,
+                `Local time: ${localTime}`,
+                condition,
+                `${temp}°C`,
+                `${humidity}%`,
+                `${wind}km/h`
+            ], true)
             imageElement(`https:${icon}`)
             
             switch (response.code) {
