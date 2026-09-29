@@ -7,7 +7,7 @@ const API_KEY = '82b7461b5f374a1f89513626262909'
 function paragraphElement([...content], isValid) {
     results.textContent = ''
     const p = document.createElement('p')
-    p.textContent = `${content}`
+    p.textContent = content.join('\n')
     results.appendChild(p)
     if(!isValid) {
         p.style.color = '#bf616a'
