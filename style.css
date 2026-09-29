@@ -1,0 +1,19 @@
+@font-face {
+    font-family: "Work Sans";
+    src: url("./font/WorkSans-VariableFont_wght.ttf") format("truetype");
+}
+
+.bg-color {
+    background-color: #2e3440;
+    color: #eceff4;
+    font-family: "Work Sans", sans-serif;
+}
+
+.greeting {
+    color: #bf616a;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
